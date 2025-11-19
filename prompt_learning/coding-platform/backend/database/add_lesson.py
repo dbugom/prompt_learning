@@ -1,6 +1,6 @@
 """
 Script to add a new lesson to the database
-Usage: python -m backend.database.add_lesson
+Usage: python -m database.add_lesson
 """
 
 import asyncio
@@ -32,67 +32,163 @@ async def add_lesson(lesson_data):
         print(f"✓ Successfully created lesson: {lesson_data['title']}")
         return True
 
-# Example lesson - modify this with your own lesson data
+# LESSON 2: Writing Clear and Specific Instructions
 NEW_LESSON = {
-    "title": "Advanced Loops and Comprehensions",
-    "slug": "advanced-loops-comprehensions",
-    "description": "Master advanced iteration techniques in Python",
-    "difficulty": "intermediate",
-    "order": 6,
+    "title": "Writing Clear and Specific Instructions",
+    "slug": "clear-instructions",
+    "description": "Master the art of writing precise, unambiguous prompts that get you the results you want from LLMs.",
+    "difficulty": "beginner",
+    "order": 2,
     "language": "python",
-    "estimated_time": 40,
-    "tags": ["loops", "comprehensions", "advanced"],
-    "content": """# Advanced Loops and Comprehensions
+    "estimated_time": 30,
+    "tags": ["prompt-engineering", "llm-basics", "openai", "introduction"],
+    "content": """# Introduction to LLMs and Prompt Engineering
 
-In this lesson, you'll learn:
-- List comprehensions
-- Dictionary comprehensions
-- Nested loops
-- Advanced iteration techniques
+## Learning Objectives
+- Understand what Large Language Models (LLMs) are and how they process text
+- Learn about key parameters: temperature, max_tokens, and model selection
+- Make your first API call to OpenAI's GPT models
+- Understand tokens and how they affect API usage and costs
+- Write effective basic prompts
 
-## List Comprehensions
+## Introduction
 
-List comprehensions provide a concise way to create lists:
+Large Language Models (LLMs) have revolutionized how we interact with computers and process information. These AI models, trained on vast amounts of text data, can understand context, generate human-like responses, and assist with a wide variety of tasks from writing code to answering questions.
 
-```python
-# Traditional way
-squares = []
-for x in range(10):
-    squares.append(x**2)
+**Prompt Engineering** is the art and science of crafting effective inputs (prompts) to get the best possible outputs from LLMs. It's a crucial skill for developers, researchers, and anyone working with AI systems. Unlike traditional programming where you write precise instructions, prompt engineering involves communicating your intent in natural language while understanding the model's capabilities and limitations.
 
-# List comprehension
-squares = [x**2 for x in range(10)]
-```
+In this lesson, you'll learn the fundamentals of LLMs and make your first API call using Python and the OpenAI library.
+
+## Core Concepts
+
+### What are LLMs?
+
+Large Language Models are neural networks trained on massive text datasets. They learn patterns, relationships, and structures in language, enabling them to:
+- Generate coherent, contextually relevant text
+- Answer questions based on learned knowledge
+- Complete tasks like summarization, translation, and code generation
+- Understand nuance, context, and even some reasoning
+
+Popular LLMs include:
+- **GPT-4 / GPT-3.5** (OpenAI) - General purpose, highly capable
+- **Claude** (Anthropic) - Strong reasoning and safety features
+- **Gemini** (Google) - Multimodal capabilities
+- **Llama** (Meta) - Open source alternative
+
+### Understanding Tokens
+
+Tokens are the basic units that LLMs process. A token can be:
+- A whole word: "hello" = 1 token
+- Part of a word: "programming" = 2 tokens ("program" + "ming")
+- Punctuation: "!" = 1 token
+
+**Why tokens matter:**
+- API pricing is based on tokens (input + output)
+- Models have maximum token limits (context windows)
+- GPT-3.5-turbo: ~4,096 tokens
+- GPT-4: ~8,192 tokens (some versions up to 128k)
+
+**Rule of thumb:** 1 token ≈ 4 characters or ≈ 0.75 words in English
+
+### Key Parameters
+
+When calling an LLM API, you control behavior through parameters:
+
+**1. Temperature (0.0 - 2.0)**
+- Controls randomness/creativity
+- **0.0**: Deterministic, same output every time (good for factual tasks)
+- **0.7**: Balanced creativity (default for most uses)
+- **1.5+**: Very creative, unpredictable (good for brainstorming)
+
+**2. Max Tokens**
+- Maximum length of the response
+- Prevents runaway costs and ensures concise answers
+- Does NOT include input tokens
+
+**3. Model Selection**
+- **gpt-3.5-turbo**: Fast, cheap, good for simple tasks ($0.0015/1k tokens)
+- **gpt-4**: Slower, expensive, best reasoning ($0.03/1k tokens)
+- Choose based on task complexity and budget
 
 ## Your Task
 
-Create a function called `get_evens(numbers)` that:
-- Takes a list of numbers
-- Returns only the even numbers
-- Use a list comprehension
-
-**Example:**
-```python
-print(get_evens([1, 2, 3, 4, 5, 6]))  # Output: [2, 4, 6]
-```
+Create a function called `ask_llm()` that takes a question and returns an LLM response with appropriate parameters.
 """,
-    "starter_code": """def get_evens(numbers):
-    # Use list comprehension here
-    pass
+    "starter_code": """import os
+from openai import OpenAI
 
-# Test your function
-print(get_evens([1, 2, 3, 4, 5, 6]))
+# Initialize OpenAI client
+# API key should be set in environment variable: OPENAI_API_KEY
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY', 'test-key'))
+
+def ask_llm(question: str) -> str:
+    \"\"\"
+    Send a question to GPT-3.5-turbo and return the response.
+
+    Args:
+        question (str): The question to ask the LLM
+
+    Returns:
+        str: The LLM's response
+    \"\"\"
+    # TODO: Implement the API call
+    # Hint: Use client.chat.completions.create()
+    # Remember to set temperature=0.7 and max_tokens=200
+
+    try:
+        # Your code here
+        pass
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+# Test your implementation
+if __name__ == "__main__":
+    test_question = "What is prompt engineering in one sentence?"
+    response = ask_llm(test_question)
+    print(f"Question: {test_question}")
+    print(f"Answer: {response}")
 """,
-    "solution_code": """def get_evens(numbers):
-    return [n for n in numbers if n % 2 == 0]
+    "solution_code": """import os
+from openai import OpenAI
 
-print(get_evens([1, 2, 3, 4, 5, 6]))
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY', 'test-key'))
+
+def ask_llm(question: str) -> str:
+    \"\"\"
+    Send a question to GPT-3.5-turbo and return the response.
+
+    Args:
+        question (str): The question to ask the LLM
+
+    Returns:
+        str: The LLM's response
+    \"\"\"
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": question}
+            ],
+            temperature=0.7,
+            max_tokens=200
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+# Test your implementation
+if __name__ == "__main__":
+    test_question = "What is prompt engineering in one sentence?"
+    response = ask_llm(test_question)
+    print(f"Question: {test_question}")
+    print(f"Answer: {response}")
 """,
     "test_cases": [
         {
             "input": "",
-            "expected_output": "[2, 4, 6]",
-            "description": "Filter even numbers"
+            "expected_output": "contains:prompt engineering",
+            "description": "Function should return a response about prompt engineering"
         }
     ]
 }
