@@ -92,7 +92,7 @@ async def execute_code_on_piston(code: str, language: str, stdin: str = "") -> D
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
             start_time = time.time()
-            response = await client.post(f"{PISTON_URL}/execute", json=payload)
+            response = await client.post(f"{PISTON_URL}/api/v2/execute", json=payload)
             execution_time = time.time() - start_time
 
             if response.status_code != 200:
@@ -273,7 +273,7 @@ async def get_runtimes():
     """
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.get(f"{PISTON_URL}/runtimes")
+            response = await client.get(f"{PISTON_URL}/api/v2/runtimes")
 
             if response.status_code != 200:
                 raise HTTPException(

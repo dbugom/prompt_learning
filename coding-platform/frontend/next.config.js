@@ -2,12 +2,21 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  output: 'standalone',
+
+  // Disable static optimization during build to avoid API calls
+  generateBuildId: async () => {
+    return 'build-id'
+  },
 
   // Environment variables
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
     NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000',
   },
+
+  // Skip trailing slash redirects
+  skipTrailingSlashRedirect: true,
 
   // Security headers
   async headers() {

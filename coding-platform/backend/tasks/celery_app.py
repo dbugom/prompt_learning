@@ -30,9 +30,9 @@ celery_app.conf.update(
 )
 
 # Auto-discover tasks
-celery_app.autodiscover_tasks(['queue'])
+celery_app.autodiscover_tasks(['tasks'])
 
-@celery_app.task(name="queue.celery_app.test_task")
+@celery_app.task(name="tasks.celery_app.test_task")
 def test_task():
     """
     Test task for Celery

@@ -38,11 +38,13 @@ services:
       retries: 5
 
   # Piston Code Execution Engine
+  # NOTE: Running in privileged mode for development
+  # For production, use proper security constraints
   piston:
     image: ghcr.io/engineer-man/piston
     container_name: coding_platform_piston
     restart: unless-stopped
-    privileged: false
+    privileged: true
     # Security: Resource limits
     deploy:
       resources:
@@ -54,17 +56,6 @@ services:
           memory: 512M
     networks:
       - platform_network
-    # Security: No internet access for code execution
-    cap_drop:
-      - ALL
-    cap_add:
-      - DAC_OVERRIDE
-      - SETUID
-      - SETGID
-    security_opt:
-      - no-new-privileges:true
-    tmpfs:
-      - /piston/jobs:exec,uid=1000,gid=1000,mode=0700
     volumes:
       - piston_packages:/piston/packages
     environment:
@@ -121,7 +112,7 @@ services:
       dockerfile: Dockerfile
     container_name: coding_platform_celery
     restart: unless-stopped
-    command: celery -A queue.celery_app worker --loglevel=info --concurrency=4
+    command: celery -A tasks.celery_app worker --loglevel=info --concurrency=4
     depends_on:
       - redis
       - postgres
@@ -149,7 +140,7 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
       - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-ws://localhost:8000}
-      - NODE_ENV=production
+      - NODE_ENV=development
     volumes:
       - ./frontend:/app
       - /app/node_modules
