@@ -6,10 +6,12 @@ A complete, production-ready interactive **Prompt Engineering** education platfo
 
 ### Core Features
 - **Interactive Code Editor**: CodeMirror 6 with Python syntax highlighting for LLM API code
-- **Secure Code Execution**: Sandboxed execution via Piston engine with resource limits
+- **Secure Code Execution**: Sandboxed execution via Piston engine with resource limits and all LLM libraries installed
 - **Real-Time LLM Interaction**: Execute Python code that calls OpenAI, Anthropic, and Google APIs
-- **Comprehensive Curriculum**: 22 lessons from beginner to advanced prompt engineering
-- **Progress Tracking**: Track student progress through lessons with detailed analytics
+- **Comprehensive Curriculum**: 22 complete lessons from beginner to advanced prompt engineering
+- **Practical Exercises**: 2 hands-on exercises per lesson with hints to reinforce learning
+- **Exercise Validation**: Automatic checking of solutions with helpful feedback
+- **Progress Tracking**: Track student progress through lessons and exercises with detailed analytics
 - **User Authentication**: JWT-based authentication with secure password hashing
 - **Responsive Design**: Mobile-friendly UI that works on all devices
 - **RESTful API**: Comprehensive API with OpenAPI/Swagger documentation
@@ -190,6 +192,28 @@ A complete, production-ready interactive **Prompt Engineering** education platfo
     - API key management
     - Rate limiting and cost controls
     - Monitoring and logging
+
+## Practical Exercises
+
+Each lesson includes **2 hands-on exercises** to reinforce learning:
+
+### Exercise Features
+- **Clear Objectives**: Each exercise has specific learning goals
+- **Starter Code**: Template to get students started quickly
+- **Hint System**: Short, precise hints available on request
+- **Automatic Validation**: Real-time feedback on solutions
+- **Progress Tracking**: Must complete exercises to unlock next lesson
+- **Solution Access**: Full solutions available with confirmation
+
+### Example Exercises (Lesson 1)
+1. **Deterministic Responses**: Control temperature for consistent outputs
+2. **Response Length Control**: Use max_tokens to limit response size
+
+### Educational Benefits
+- ✓ **Reinforces Concepts**: Practice immediately after learning
+- ✓ **Builds Confidence**: Guided practice with hints
+- ✓ **Progressive Learning**: Must master basics before advancing
+- ✓ **Real-World Skills**: Exercises mirror actual use cases
 
 ## System Requirements
 
