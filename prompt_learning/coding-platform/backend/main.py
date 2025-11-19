@@ -15,7 +15,7 @@ import os
 from loguru import logger
 
 # Import routers
-from api import auth, code_execution, lessons, progress
+from api import auth, code_execution, lessons, progress, admin
 from database.connection import init_db, close_db
 
 # Configure logger
@@ -131,6 +131,7 @@ app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(code_execution.router, prefix="/api/code", tags=["Code Execution"])
 app.include_router(lessons.router, prefix="/api/lessons", tags=["Lessons"])
 app.include_router(progress.router, prefix="/api/progress", tags=["Progress"])
+app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
 
 if __name__ == "__main__":
     import uvicorn

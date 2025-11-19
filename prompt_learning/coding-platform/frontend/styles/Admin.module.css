@@ -1,0 +1,460 @@
+/* Admin Panel Styles */
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.backButton {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s;
+  font-weight: 600;
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(-5px);
+}
+
+.adminBadge {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 193, 7, 0.3);
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  border-radius: 6px;
+  color: #ffc107;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  height: calc(100vh - 100px);
+  gap: 0;
+}
+
+/* Sidebar - Students List */
+.sidebar {
+  background: rgba(0, 0, 0, 0.3);
+  border-right: 2px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.studentList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.studentCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: left;
+  width: 100%;
+}
+
+.studentCard:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.studentCard.active {
+  background: rgba(102, 126, 234, 0.3);
+  border-color: #667eea;
+}
+
+.studentInfo {
+  margin-bottom: 0.5rem;
+}
+
+.studentName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.studentEmail {
+  font-size: 0.85rem;
+  color: #b0b0b0;
+  margin-bottom: 0.25rem;
+}
+
+.studentFullName {
+  font-size: 0.9rem;
+  color: #d0d0d0;
+}
+
+.studentStatus {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.studentStatus .active {
+  padding: 0.25rem 0.75rem;
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  border-radius: 4px;
+  color: #4caf50;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.studentStatus .inactive {
+  padding: 0.25rem 0.75rem;
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.5);
+  border-radius: 4px;
+  color: #f44336;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Main Panel - Lesson Access */
+.mainPanel {
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.panelHeader h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #b0b0b0;
+  font-size: 0.95rem;
+}
+
+.bulkActions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Lesson Grid */
+.lessonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.lessonCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s;
+}
+
+.lessonCard.enabled {
+  border-color: rgba(76, 175, 80, 0.5);
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.lessonCard.disabled {
+  border-color: rgba(244, 67, 54, 0.5);
+  background: rgba(244, 67, 54, 0.05);
+  opacity: 0.8;
+}
+
+.lessonHeader {
+  margin-bottom: 1rem;
+}
+
+.lessonHeader h3 {
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.lessonSlug {
+  font-size: 0.85rem;
+  color: #b0b0b0;
+  font-family: 'Courier New', monospace;
+}
+
+.lessonStatus {
+  margin-bottom: 1rem;
+}
+
+.badgeEnabled {
+  padding: 0.4rem 0.8rem;
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  border-radius: 4px;
+  color: #4caf50;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badgeDisabled {
+  padding: 0.4rem 0.8rem;
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.5);
+  border-radius: 4px;
+  color: #f44336;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.disabledReason {
+  background: rgba(255, 193, 7, 0.1);
+  padding: 0.75rem;
+  border-radius: 4px;
+  border-left: 3px solid #ffc107;
+  font-size: 0.9rem;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.disabledReason strong {
+  color: #ffc107;
+}
+
+/* Buttons */
+.enableButton {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  border-radius: 6px;
+  color: #4caf50;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.enableButton:hover {
+  background: rgba(76, 175, 80, 0.3);
+  transform: translateY(-2px);
+}
+
+.disableButton {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.5);
+  border-radius: 6px;
+  color: #f44336;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.disableButton:hover {
+  background: rgba(244, 67, 54, 0.3);
+  transform: translateY(-2px);
+}
+
+.successButton {
+  padding: 0.75rem 1.5rem;
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  border-radius: 6px;
+  color: #4caf50;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.successButton:hover {
+  background: rgba(76, 175, 80, 0.3);
+  transform: translateY(-2px);
+}
+
+.dangerButton {
+  padding: 0.75rem 1.5rem;
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.5);
+  border-radius: 6px;
+  color: #f44336;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.dangerButton:hover {
+  background: rgba(244, 67, 54, 0.3);
+  transform: translateY(-2px);
+}
+
+.cancelButton {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cancelButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.modal h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.modal p {
+  margin-bottom: 1.5rem;
+  color: #e0e0e0;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.textarea::placeholder {
+  color: #999;
+}
+
+.modalActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #b0b0b0;
+  font-size: 1.1rem;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    height: auto;
+    max-height: 300px;
+  }
+
+  .lessonGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .panelHeader {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .bulkActions {
+    width: 100%;
+  }
+
+  .bulkActions button {
+    flex: 1;
+  }
+}

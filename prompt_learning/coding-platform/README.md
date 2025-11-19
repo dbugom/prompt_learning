@@ -12,6 +12,8 @@ A complete, production-ready interactive **Prompt Engineering** education platfo
 - **Practical Exercises**: 2 hands-on exercises per lesson with hints to reinforce learning
 - **Exercise Validation**: Automatic checking of solutions with helpful feedback
 - **Progress Tracking**: Track student progress through lessons and exercises with detailed analytics
+- **Lesson Access Control**: Admins can enable/disable lessons for specific students (subscription management, progressive unlocking)
+- **Admin Panel**: Beautiful UI for managing student access to lessons with bulk operations
 - **User Authentication**: JWT-based authentication with secure password hashing
 - **Responsive Design**: Mobile-friendly UI that works on all devices
 - **RESTful API**: Comprehensive API with OpenAPI/Swagger documentation
@@ -214,6 +216,46 @@ Each lesson includes **2 hands-on exercises** to reinforce learning:
 - ✓ **Builds Confidence**: Guided practice with hints
 - ✓ **Progressive Learning**: Must master basics before advancing
 - ✓ **Real-World Skills**: Exercises mirror actual use cases
+
+## Admin Features - Lesson Access Control
+
+### Overview
+Admins can control which lessons are accessible to specific students, enabling:
+- **Subscription Management**: Lock premium lessons for free-tier users
+- **Progressive Unlocking**: Release lessons based on student progress
+- **Account Management**: Temporarily restrict access for suspended accounts
+- **Custom Learning Paths**: Create personalized curriculum for each student
+- **Beta Testing**: Grant early access to select users
+
+### Admin Panel (`/admin/students`)
+A beautiful, intuitive interface for managing student access:
+- **Student List**: View all students with email, name, and status
+- **Lesson Grid**: Visual overview of all lessons with enable/disable toggles
+- **Bulk Operations**: Disable/enable all lessons with one click
+- **Reason Tracking**: Document why lessons were restricted
+- **Audit Trail**: Track which admin made access changes
+- **Lock Badges**: Clear visual indicators (🔒) for locked lessons
+
+### Access Control Features
+- **Default Allow**: All lessons accessible by default (no records needed)
+- **Blacklist Approach**: Create restrictions only when needed
+- **Admin Bypass**: Admins can always access all lessons
+- **Student View**: Locked lessons show 🔒 badge and error on click
+- **API-Driven**: Full REST API for programmatic access control
+- **Database-Backed**: All restrictions stored in PostgreSQL
+
+### Use Cases
+1. **Freemium Model**: Lock advanced lessons, require upgrade
+2. **Sequential Progression**: Unlock lessons after prerequisites
+3. **Account Suspension**: Temporarily block access for non-payment
+4. **Early Access**: Grant beta testers access to unreleased content
+5. **Custom Cohorts**: Different lesson access per student group
+
+### Technical Details
+- **Endpoint**: `/api/admin/students` (requires admin privileges)
+- **Database Table**: `user_lesson_access` with indexes
+- **Security**: JWT authentication + admin role check
+- **Documentation**: See `LESSON_ACCESS_CONTROL.md` for full API docs
 
 ## System Requirements
 

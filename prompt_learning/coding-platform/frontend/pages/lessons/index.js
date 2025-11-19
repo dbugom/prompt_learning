@@ -8,7 +8,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { toast } from 'react-hot-toast'
 import styles from '../../styles/Lessons.module.css'
-import { getLessonsWithProgress } from '../../utils/api'
+import { getLessons, getLessonsWithProgress, getCurrentUser } from '../../utils/api'
 import { getToken, removeToken } from '../../utils/auth'
 
 export default function Lessons() {
@@ -16,6 +16,7 @@ export default function Lessons() {
   const [lessons, setLessons] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [stats, setStats] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null)
 
   useEffect(() => {
     // Check if user is logged in
@@ -30,18 +31,36 @@ export default function Lessons() {
 
   const loadLessons = async () => {
     try {
-      const data = await getLessonsWithProgress()
-      setLessons(data)
+      // Load current user info
+      const user = await getCurrentUser()
+      setCurrentUser(user)
+
+      // Load lessons with progress
+      const progressData = await getLessonsWithProgress()
+
+      // Load lessons with access control
+      const accessData = await getLessons()
+
+      // Merge progress and access data
+      const mergedData = progressData.map(progressLesson => {
+        const accessLesson = accessData.find(l => l.id === progressLesson.lesson_id)
+        return {
+          ...progressLesson,
+          is_accessible: accessLesson?.is_accessible ?? true
+        }
+      })
+
+      setLessons(mergedData)
 
       // Calculate stats
-      const completed = data.filter(l => l.is_completed).length
-      const total = data.length
-      const avgScore = data.reduce((sum, l) => sum + l.best_score, 0) / (total || 1)
+      const completed = mergedData.filter(l => l.is_completed).length
+      const total = mergedData.length
+      const avgScore = mergedData.reduce((sum, l) => sum + l.best_score, 0) / (total || 1)
 
       setStats({
         completed,
         total,
-        inProgress: data.filter(l => l.attempts > 0 && !l.is_completed).length,
+        inProgress: mergedData.filter(l => l.attempts > 0 && !l.is_completed).length,
         avgScore: Math.round(avgScore)
       })
     } catch (error) {
@@ -89,9 +108,16 @@ export default function Lessons() {
       <div className={styles.container}>
         <header className={styles.header}>
           <h1>My Learning Dashboard</h1>
-          <button onClick={handleLogout} className={styles.logoutButton}>
-            Logout
-          </button>
+          <div className={styles.headerActions}>
+            {currentUser?.is_admin && (
+              <Link href="/admin/students" className={styles.adminButton}>
+                🔐 Admin Panel
+              </Link>
+            )}
+            <button onClick={handleLogout} className={styles.logoutButton}>
+              Logout
+            </button>
+          </div>
         </header>
 
         {stats && (
@@ -124,50 +150,71 @@ export default function Lessons() {
             </div>
           ) : (
             <div className={styles.lessonsGrid}>
-              {lessons.map((lesson) => (
-                <Link
-                  key={lesson.lesson_id}
-                  href={`/lessons/${lesson.lesson_slug}`}
-                  className={styles.lessonCard}
-                >
-                  <div className={styles.lessonHeader}>
-                    <h3>{lesson.lesson_title}</h3>
-                    {lesson.is_completed && (
-                      <span className={styles.completedBadge}>✓</span>
+              {lessons.map((lesson) => {
+                const isLocked = !lesson.is_accessible
+
+                return (
+                  <div
+                    key={lesson.lesson_id}
+                    className={`${styles.lessonCard} ${isLocked ? styles.locked : ''}`}
+                    onClick={() => {
+                      if (isLocked) {
+                        toast.error('This lesson is locked. Please contact an administrator.')
+                      } else {
+                        router.push(`/lessons/${lesson.lesson_slug}`)
+                      }
+                    }}
+                  >
+                    <div className={styles.lessonHeader}>
+                      <h3>{lesson.lesson_title}</h3>
+                      <div className={styles.badges}>
+                        {isLocked && (
+                          <span className={styles.lockedBadge}>🔒 Locked</span>
+                        )}
+                        {lesson.is_completed && !isLocked && (
+                          <span className={styles.completedBadge}>✓</span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className={styles.lessonMeta}>
+                      <span
+                        className={styles.difficulty}
+                        style={{ backgroundColor: getDifficultyColor(lesson.difficulty) }}
+                      >
+                        {lesson.difficulty || 'beginner'}
+                      </span>
+                    </div>
+
+                    {!isLocked && lesson.attempts > 0 && (
+                      <div className={styles.progress}>
+                        <div className={styles.progressInfo}>
+                          <span>Best Score: {lesson.best_score}%</span>
+                          <span>Attempts: {lesson.attempts}</span>
+                        </div>
+                        <div className={styles.progressBar}>
+                          <div
+                            className={styles.progressFill}
+                            style={{ width: `${lesson.best_score}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    )}
+
+                    {!isLocked && lesson.attempts === 0 && (
+                      <div className={styles.startPrompt}>
+                        Click to start →
+                      </div>
+                    )}
+
+                    {isLocked && (
+                      <div className={styles.lockedMessage}>
+                        Access restricted. Contact your administrator.
+                      </div>
                     )}
                   </div>
-
-                  <div className={styles.lessonMeta}>
-                    <span
-                      className={styles.difficulty}
-                      style={{ backgroundColor: getDifficultyColor(lesson.difficulty) }}
-                    >
-                      {lesson.difficulty || 'beginner'}
-                    </span>
-                  </div>
-
-                  {lesson.attempts > 0 && (
-                    <div className={styles.progress}>
-                      <div className={styles.progressInfo}>
-                        <span>Best Score: {lesson.best_score}%</span>
-                        <span>Attempts: {lesson.attempts}</span>
-                      </div>
-                      <div className={styles.progressBar}>
-                        <div
-                          className={styles.progressFill}
-                          style={{ width: `${lesson.best_score}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  )}
-
-                  {lesson.attempts === 0 && (
-                    <div className={styles.startPrompt}>
-                      Click to start →
-                    </div>
-                  )}
-                </Link>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>

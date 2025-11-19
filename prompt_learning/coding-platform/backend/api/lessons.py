@@ -5,7 +5,7 @@ Manages educational content and lessons
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, and_
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 from datetime import datetime
@@ -13,6 +13,7 @@ from datetime import datetime
 from database.connection import get_db
 from models.user import User
 from models.lesson import Lesson
+from models.lesson_access import UserLessonAccess
 from api.auth import get_current_user
 
 router = APIRouter()
@@ -85,9 +86,39 @@ class LessonListItem(BaseModel):
     language: str
     estimated_time: Optional[int]
     tags: Optional[List[str]]
+    is_accessible: bool = True  # Whether user can access this lesson
 
     class Config:
         from_attributes = True
+
+# Helper functions
+async def check_lesson_access(
+    user_id: str,
+    lesson_id: str,
+    db: AsyncSession
+) -> bool:
+    """
+    Check if a user has access to a specific lesson
+    Returns True if accessible, False if disabled
+
+    Logic:
+    - If no access record exists: allow (default)
+    - If access record exists: check is_enabled flag
+    """
+    result = await db.execute(
+        select(UserLessonAccess).where(
+            and_(
+                UserLessonAccess.user_id == user_id,
+                UserLessonAccess.lesson_id == lesson_id
+            )
+        )
+    )
+    access_record = result.scalar_one_or_none()
+
+    if access_record is None:
+        return True  # No record = default allow
+
+    return access_record.is_enabled
 
 # API Endpoints
 @router.get("", response_model=List[LessonListItem])
@@ -97,6 +128,7 @@ async def get_lessons(
 ):
     """
     Get all published lessons (sorted by order)
+    Includes access control information for each lesson
     """
     result = await db.execute(
         select(Lesson)
@@ -105,7 +137,25 @@ async def get_lessons(
     )
     lessons = result.scalars().all()
 
-    return [LessonListItem.from_orm(lesson) for lesson in lessons]
+    # Build response with access information
+    lesson_items = []
+    for lesson in lessons:
+        is_accessible = await check_lesson_access(current_user.id, lesson.id, db)
+        lesson_dict = {
+            "id": lesson.id,
+            "title": lesson.title,
+            "slug": lesson.slug,
+            "description": lesson.description,
+            "difficulty": lesson.difficulty,
+            "order": lesson.order,
+            "language": lesson.language,
+            "estimated_time": lesson.estimated_time,
+            "tags": lesson.tags,
+            "is_accessible": is_accessible
+        }
+        lesson_items.append(LessonListItem(**lesson_dict))
+
+    return lesson_items
 
 @router.get("/{lesson_id}", response_model=LessonResponse)
 async def get_lesson(
@@ -115,6 +165,7 @@ async def get_lesson(
 ):
     """
     Get lesson by ID
+    Checks access permissions before returning
     """
     result = await db.execute(
         select(Lesson).where(
@@ -130,6 +181,15 @@ async def get_lesson(
             detail="Lesson not found"
         )
 
+    # Check access permissions (admins bypass this check)
+    if not current_user.is_admin:
+        is_accessible = await check_lesson_access(current_user.id, lesson_id, db)
+        if not is_accessible:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have access to this lesson. Please contact an administrator."
+            )
+
     return LessonResponse.from_orm(lesson)
 
 @router.get("/slug/{slug}", response_model=LessonResponse)
@@ -140,6 +200,7 @@ async def get_lesson_by_slug(
 ):
     """
     Get lesson by slug
+    Checks access permissions before returning
     """
     result = await db.execute(
         select(Lesson).where(
@@ -154,6 +215,15 @@ async def get_lesson_by_slug(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Lesson not found"
         )
+
+    # Check access permissions (admins bypass this check)
+    if not current_user.is_admin:
+        is_accessible = await check_lesson_access(current_user.id, lesson.id, db)
+        if not is_accessible:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have access to this lesson. Please contact an administrator."
+            )
 
     return LessonResponse.from_orm(lesson)
 
