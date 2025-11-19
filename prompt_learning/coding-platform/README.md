@@ -320,15 +320,45 @@ docker-compose ps
 - **Password**: admin123
 - **Change immediately in production!**
 
+### 6. Set Up Admin User (Optional)
+
+If you need to make an existing user an admin:
+
+```bash
+# Connect to database
+docker exec coding_platform_db psql -U platform_user -d coding_platform
+
+# Grant admin privileges
+UPDATE users SET is_admin = true WHERE username = 'your_username';
+
+# Exit
+\q
+```
+
+### 7. Access Admin Panel
+
+Once logged in as an admin user:
+1. Navigate to http://localhost:3000
+2. Log in with admin credentials
+3. Click the **"🔐 Admin Panel"** button in the header
+4. Select a student to manage their lesson access
+5. Enable/disable lessons individually or in bulk
+
+**See `LESSON_ACCESS_CONTROL.md` for detailed admin panel documentation.**
+
 ## Project Structure
 
 ```
 coding-platform/
 ├── docker-compose.yml           # Docker services configuration
 ├── .env                        # Environment variables
+├── README.md                   # Project documentation
 ├── CLAUDE.md                   # Session context (for development)
+├── LESSON_ACCESS_CONTROL.md    # Admin panel feature guide (NEW)
 ├── frontend/                   # Next.js frontend application
 │   ├── pages/                 # Next.js pages
+│   │   ├── admin/
+│   │   │   └── students.js    # Admin panel for lesson access control
 │   │   ├── lessons/
 │   │   │   ├── index.js       # Lesson list
 │   │   │   └── [slug].js      # Individual lesson page
@@ -336,25 +366,34 @@ coding-platform/
 │   │   └── register.js
 │   ├── components/            # React components
 │   │   ├── CodeEditor.js      # CodeMirror editor
+│   │   ├── ExercisePanel.js   # Exercise system
 │   │   └── OutputConsole.js   # Execution results
 │   ├── styles/               # CSS modules
+│   │   ├── Admin.module.css   # Admin panel styles
+│   │   └── Lessons.module.css # Lesson list styles
 │   └── utils/                # Utility functions
 ├── backend/                   # FastAPI backend application
 │   ├── main.py               # FastAPI entry point
 │   ├── requirements.txt      # Python dependencies (including LLM libs)
 │   ├── api/                  # API endpoints
-│   │   ├── lessons.py        # Lesson CRUD
+│   │   ├── lessons.py        # Lesson CRUD + access control
 │   │   ├── auth.py           # Authentication
+│   │   ├── admin.py          # Admin panel endpoints (NEW)
 │   │   ├── code_execution.py # Code execution
 │   │   └── progress.py       # Progress tracking
 │   ├── models/               # Database models
-│   │   └── lesson.py         # Lesson model
+│   │   ├── lesson.py         # Lesson model
+│   │   ├── lesson_access.py  # Access control model (NEW)
+│   │   ├── user.py           # User model
+│   │   └── progress.py       # Progress model
 │   ├── database/             # Database configuration
 │   │   ├── connection.py     # Database connection
+│   │   ├── add_lesson_access_table.py  # Access control migration (NEW)
 │   │   ├── add_lesson.py     # Lesson 1
 │   │   ├── add_lesson_lesson2.py  # Lesson 2
 │   │   ├── add_lesson3.py    # Lesson 3
-│   │   └── add_lesson4.py    # Lesson 4
+│   │   ├── add_lesson4.py    # Lesson 4
+│   │   └── add_lesson5-22.py # Lessons 5-22
 │   ├── queue/                # Celery tasks
 │   └── tests/                # API tests
 ├── nginx/                    # Nginx configuration
