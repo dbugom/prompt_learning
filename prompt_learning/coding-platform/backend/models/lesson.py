@@ -26,6 +26,9 @@ class Lesson(Base):
     solution_code = Column(Text)  # Model solution (hidden from students)
     test_cases = Column(JSON)  # Array of test cases with input/expected output
 
+    # Practical exercises (mini challenges after lesson)
+    exercises = Column(JSON)  # Array of practice exercises with hints
+
     # Metadata
     language = Column(String(50), default="python")
     estimated_time = Column(Integer)  # minutes

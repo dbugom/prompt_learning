@@ -13,6 +13,7 @@ import OutputConsole from '../../components/OutputConsole'
 import LessonViewer from '../../components/LessonViewer'
 import ConfirmModal from '../../components/ConfirmModal'
 import LessonSkeleton from '../../components/LessonSkeleton'
+import ExercisePanel from '../../components/ExercisePanel'
 import { getLessonBySlug, executeCode, updateProgress } from '../../utils/api'
 import { getToken, removeToken } from '../../utils/auth'
 
@@ -333,6 +334,21 @@ export default function LessonPage() {
             aria-labelledby="lesson-title"
           >
             <LessonViewer lesson={lesson} />
+
+            {/* Practical Exercises */}
+            {lesson.exercises && lesson.exercises.length > 0 && (
+              <ExercisePanel
+                exercises={lesson.exercises}
+                onComplete={() => {
+                  // Mark lesson as completed with exercises
+                  updateProgress(lesson.id, {
+                    lesson_id: lesson.id,
+                    is_completed: true,
+                    score: 100
+                  })
+                }}
+              />
+            )}
           </div>
 
           <div className={styles.rightPanel}>
