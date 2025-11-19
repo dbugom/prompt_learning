@@ -1,0 +1,15 @@
+/* CodeEditor component styles */
+
+.editorContainer {
+  height: 100%;
+  overflow: hidden;
+}
+
+.editor {
+  height: 100% !important;
+  font-size: 14px;
+}
+
+.editor > div {
+  height: 100% !important;
+}
